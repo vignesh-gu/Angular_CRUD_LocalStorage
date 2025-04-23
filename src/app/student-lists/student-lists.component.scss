@@ -1,0 +1,9 @@
+.container-N{
+    max-width: 1200px;
+    margin:0 auto;
+}
+
+.required::after {
+    content: " *";
+    color: red;
+  }
