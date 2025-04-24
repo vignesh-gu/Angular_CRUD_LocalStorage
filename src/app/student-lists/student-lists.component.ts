@@ -15,11 +15,13 @@ export class StudentListsComponent {
   @ViewChild('modal') modal!: ElementRef;
 
   Student_Lists!:Student[];
+  All_Students!:Student[];
 
   studentForm!:FormGroup;
   FormMode = FormMode;
   formMode:FormMode = FormMode.Add;
   studentId:number = 0;
+  searchText:string='';
 
   constructor(private Fb:FormBuilder){}
 
@@ -33,9 +35,11 @@ export class StudentListsComponent {
     const data = localStorage.getItem('StudentDetails')
     if(data){
       this.Student_Lists = JSON.parse(data)
+      this.All_Students = [...this.Student_Lists]
     }else{
       this.Student_Lists = [];
     }
+
   }
 
   AddStudentDetails(){
@@ -48,6 +52,7 @@ export class StudentListsComponent {
     const studentList = JSON.parse(localStorage.getItem('StudentDetails') || '[]') ;
     const updateList = [...studentList,studentData]
     this.Student_Lists = updateList;
+    this.All_Students = [...this.Student_Lists]
 
     this.modal.nativeElement.click();
     this.studentForm.reset();
@@ -76,8 +81,9 @@ export class StudentListsComponent {
 
     this.modal.nativeElement.click();
     this.studentForm.reset();
-
+    this.formMode = this.FormMode.Add;
     this.Student_Lists = updateList;
+    this.All_Students = [...this.Student_Lists]
     localStorage.setItem('StudentDetails',JSON.stringify(updateList));
     console.log(updateList)
     
@@ -104,8 +110,15 @@ export class StudentListsComponent {
     })
     
     this.Student_Lists = updateList;
+    this.All_Students = [...this.Student_Lists]
     localStorage.setItem('StudentDetails',JSON.stringify(updateList))
 
+  }
+
+  filterStudents(){
+    this.All_Students = this.Student_Lists.filter((student)=>{
+      return student.name.toLowerCase().includes(this.searchText.toLowerCase().trim())
+    })
   }
 
 

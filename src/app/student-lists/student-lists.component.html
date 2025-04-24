@@ -14,9 +14,9 @@
     <div class="card-body">
         <div class="card">
             <div class="card-body d-flex justify-content-between align-items-center">
-                <form class="d-flex ">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" [(ngModel)]="searchText" name="search" placeholder="Search" aria-label="Search" (input)="filterStudents()">
+             
                   </form>
                   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                     <i class="fa-solid fa-plus"></i>
@@ -42,7 +42,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of Student_Lists; let i = index">
+          <tr *ngFor="let data of All_Students; let i = index">
             <td>{{i+1}}</td>
             <th scope="row">{{data.id}}</th>      
             <td>{{data.name}}</td>
