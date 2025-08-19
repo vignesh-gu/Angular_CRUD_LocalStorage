@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormMode, Student } from '../models/student';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
 
 
@@ -26,11 +26,11 @@ export class StudentListsComponent {
   constructor(private Fb:FormBuilder){}
 
   ngOnInit(){
-    this.studentForm =  this.Fb.group({
-      name:[''],
-      mobile:[''],
-      email:['']
-    })
+      this.studentForm =  this.Fb.group({
+        name:['',[Validators.required,Validators.pattern(/^\S.*$/)]],
+        mobile:['',[Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        email:['',[Validators.required, Validators.email]]
+      })
 
     const data = localStorage.getItem('StudentDetails')
     if(data){
@@ -43,6 +43,7 @@ export class StudentListsComponent {
   }
 
   AddStudentDetails(){
+
     const studentData = {
       id: Math.floor(100000 + Math.random() * 900000),
       name: this.studentForm.get('name')?.value,
@@ -64,10 +65,9 @@ export class StudentListsComponent {
       id: this.studentId,
       name: this.studentForm.get('name')?.value,
       mobile: this.studentForm.get('mobile')?.value,
-      email: this.studentForm.get('email')?.value
-    } 
+      email: this.studentForm.get('email')?.value    } 
 
-    console.log('Student Data:', studentData);  // Log studentData
+    console.log('Student Data:', studentData);  // Log studentData    
 
 
     const studentList  = JSON.parse(localStorage.getItem('StudentDetails') || '[]');
@@ -86,6 +86,7 @@ export class StudentListsComponent {
     this.All_Students = [...this.Student_Lists]
     localStorage.setItem('StudentDetails',JSON.stringify(updateList));
     console.log(updateList)
+    this.resetForm()
     
 
   }
@@ -119,6 +120,11 @@ export class StudentListsComponent {
     this.All_Students = this.Student_Lists.filter((student)=>{
       return student.name.toLowerCase().includes(this.searchText.toLowerCase().trim())
     })
+  }
+
+  resetForm() {
+    this.studentForm.reset();
+    this.formMode = FormMode.Add;  // default back to Add mode
   }
 
 

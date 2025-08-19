@@ -1,106 +1,123 @@
 <!-- As a heading -->
- <div class="container-N">
-<nav class="navbar navbar-light bg-primary w-100">
+<div class="container-N">
+  <nav class="navbar navbar-light bg-primary w-100">
     <div class="container-fluid d-flex justify-content-between align-items-center">
       <div class="navbar-brand mb-0 h1 text-white">Student-Lists</div>
       <div>
-      <button type="button" class="btn btn-outline-light">Log-In</button>
-      <i class="fa-regular fa-circle-user ms-4 text-white" style="font-size: 35px; vertical-align: middle;" ></i>
+        <button type="button" class="btn btn-outline-light">Log-In</button>
+        <i class="fa-regular fa-circle-user ms-4 text-white" style="font-size: 35px; vertical-align: middle;"></i>
+      </div>
     </div>
-    </div>  
-  </nav> 
+  </nav>
   <h4 class="mt-5">Student Table : </h4>
   <div class="card my-5 bg-info">
     <div class="card-body">
-        <div class="card">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" [(ngModel)]="searchText" name="search" placeholder="Search" aria-label="Search" (input)="filterStudents()">
-             
-                  </form>
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                    <i class="fa-solid fa-plus"></i>
-                    Add Student
-                </button>
-            </div>
-         
-        </div>        
+      <div class="card">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <form class="d-flex">
+            <input class="form-control me-2" type="search" [(ngModel)]="searchText" name="search" placeholder="Search"
+              aria-label="Search" (input)="filterStudents()">
+
+          </form>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="resetForm()">
+            <i class="fa-solid fa-plus"></i>
+            Add Student
+          </button>
+        </div>
+
+      </div>
     </div>
   </div>
 
 
   <table class="table table-striped">
- 
-        <thead>
-          <tr>
-            <th scope="col">S.No</th>
-            <th scope="col">Roll_No</th>
-            <th scope="col">Name</th>
-            <th scope="col">Phone_No</th>
-            <th scope="col">Email</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let data of All_Students; let i = index">
-            <td>{{i+1}}</td>
-            <th scope="row">{{data.id}}</th>      
-            <td>{{data.name}}</td>
-            <td>{{data.mobile}}</td>
-            <td>{{data.email}}</td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary me-2"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" (click)="editStudent(data)">
-                <i class="fa-solid fa-pen-to-square"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger" (click)="deleteStudent(data.id)">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </td>
-          </tr>
-        
-        </tbody>
-     
+
+    <thead>
+      <tr>
+        <th scope="col">S.No</th>
+        <th scope="col">Roll_No</th>
+        <th scope="col">Name</th>
+        <th scope="col">Phone_No</th>
+        <th scope="col">Email</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of All_Students; let i = index">
+        <td>{{i+1}}</td>
+        <th scope="row">{{data.id}}</th>
+        <td>{{data.name}}</td>
+        <td>{{data.mobile}}</td>
+        <td>{{data.email}}</td>
+        <td>
+          <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+            (click)="editStudent(data)">
+            <i class="fa-solid fa-pen-to-square"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger" (click)="deleteStudent(data.id)">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </td>
+      </tr>
+
+    </tbody>
+
   </table>
 </div>
 
 
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Add Student-Detail</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">{{formMode == FormMode.Add ? 'Add':'Update'}} Student-Detail</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
 
-            <form [formGroup]="studentForm">
-                <div class="mb-3">
-                  <label for="studentName" class="form-label required">Student Name</label>
-                  <input type="text" class="form-control" formControlName="name" id="studentName" placeholder="Enter student name">
-                </div>
+        <form [formGroup]="studentForm">
+          <div class="mb-3">
+            <label for="studentName" class="form-label required">Student Name</label>
+            <input type="text" class="form-control" formControlName="name" id="studentName"
+              placeholder="Enter student name">
+            <div class="text-danger" *ngIf="studentForm.get('name')?.invalid 
+              && (studentForm.get('name')?.dirty || studentForm.get('name')?.touched)">
+              Name is required and should not contain spaces.
+            </div>
+          </div>
 
-                <div class="mb-3">
-                    <label for="studentName" class="form-label required">Mobile Number</label>
-                    <input type="number" class="form-control" id="studentName" formControlName="mobile" placeholder="Enter Number">
-                  </div>
-                  <div class="mb-3">
-                    <label for="studentName" class="form-label required">Email</label>
-                    <input type="email" class="form-control" id="studentName" formControlName="email" placeholder="Enter Email">
-                  </div>
-        
-              </form>
+          <div class="mb-3">
+            <label for="studentName" class="form-label required">Mobile Number</label>
+            <input type="number" class="form-control" id="studentName" formControlName="mobile"
+              placeholder="Enter Number">
+            <div class="text-danger" *ngIf="studentForm.get('mobile')?.invalid 
+              && (studentForm.get('mobile')?.dirty || studentForm.get('mobile')?.touched)">
+              Mobile number must be 10 digits.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="studentName" class="form-label required">Email</label>
+            <input type="email" class="form-control" id="studentName" formControlName="email" placeholder="Enter Email">
+            <div class="text-danger" *ngIf="studentForm.get('email')?.invalid 
+              && (studentForm.get('email')?.dirty || studentForm.get('email')?.touched)">
+              Enter a valid email.
+            </div>
+          </div>
+
+        </form>
 
 
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #modal>Close</button>
-          <button *ngIf="formMode == FormMode.Add" type="button" class="btn btn-primary" (click)="AddStudentDetails()">Add Data</button>
-          <button *ngIf="formMode == FormMode.Update" type="button" class="btn btn-primary" (click)="updateStudentDetails()">Update Data</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" #modal (click)="resetForm()" >Close</button>
+        <button *ngIf="formMode == FormMode.Add" type="button" class="btn btn-primary" [disabled]="studentForm.invalid" (click)="AddStudentDetails()">Add
+          Data</button>
+        <button *ngIf="formMode == FormMode.Update" type="button" class="btn btn-primary" [disabled]="studentForm.invalid"
+          (click)="updateStudentDetails()">Update Data</button>
       </div>
     </div>
   </div>
-
-
+</div>
